@@ -1,6 +1,5 @@
 import unittest
 from textnode import TextNode, TextType
-from split_nodes_delimiter import *
 
 
 
@@ -43,32 +42,6 @@ class TestTextNode(unittest.TestCase):
         html_node = node.text_node_to_html_node()
         self.assertEqual(html_node.props["href"], "https://bootleg.com")
         self.assertEqual(html_node.tag, "a")
-    
-    #text to nodes
-    def text_to_nodes_italic(self):
-        old_nodes = [TextNode("The plain text and _the italic text_", "plain"),
-                     TextNode("_The italic text and_ the plain text", "plain")]
-        new_nodes = split_nodes_delimiter(old_nodes, "_", "italic")
-        self.assertEqual(new_nodes, [TextNode("The plain text and", "plain"),
-                                     TextNode("the italic text", "italic"),
-                                     TextNode("The italic text and", "italic"),
-                                     TextNode("the plain text"), "plain"])
-    def text_to_nodes_bold(self):
-        old_nodes = [TextNode("The plain text and _the bold text_", "plain"),
-                    TextNode("_The bold text and_ the plain text", "plain")]
-        new_nodes = split_nodes_delimiter(old_nodes, "_", "bold")
-        self.assertEqual(new_nodes, [TextNode("The plain text and", "plain"),
-                                    TextNode("the bold text", "bold"),
-                                    TextNode("The bold text and", "bold"),
-                                    TextNode("the plain text"), "plain"])
-    def text_to_nodes_code(self):
-        old_nodes = [TextNode("The plain text and _the code text_", "plain"),
-                    TextNode("_The code text and_ the plain text", "plain")]
-        new_nodes = split_nodes_delimiter(old_nodes, "_", "code")
-        self.assertEqual(new_nodes, [TextNode("The plain text and", "plain"),
-                                    TextNode("the code text", "code"),
-                                    TextNode("The code text and", "code"),
-                                    TextNode("the plain text"), "plain"])
 
 
 if __name__ == "__main__":
