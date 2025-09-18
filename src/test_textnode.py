@@ -18,7 +18,7 @@ class TestTextNode(unittest.TestCase):
         self.assertNotEqual(node, node2)
     def test_type(self):
         node = TextNode("This is a text node", TextType.ITALIC, None)
-        node2 = TextNode("This is a text node", TextType.PLAIN, None)
+        node2 = TextNode("This is a text node", TextType.TEXT, None)
         self.assertNotEqual(node, node2)
     def test_text(self):
         node = TextNode("This is a text node", TextType.ITALIC)
@@ -27,18 +27,18 @@ class TestTextNode(unittest.TestCase):
 
     #text_to_html
     def test_image(self):
-        node = TextNode("alt text", "image", "https://bootleg.com/img")
+        node = TextNode("alt text", TextType.IMAGE, "https://bootleg.com/img")
         html_node = node.text_node_to_html_node()
         self.assertEqual(html_node.props["alt"], "alt text")
         self.assertEqual(html_node.props["src"], "https://bootleg.com/img")
         self.assertEqual(html_node.tag, "img")
     def test_text(self):
-        node = TextNode("This is a text node", "plain")
+        node = TextNode("This is a text node", TextType.TEXT)
         html_node = node.text_node_to_html_node()
         self.assertEqual(html_node.tag, None)
         self.assertEqual(html_node.value, "This is a text node")
     def test_link(self):
-        node = TextNode("Harmless link", "link", "https://bootleg.com")
+        node = TextNode("Harmless link", TextType.LINK, "https://bootleg.com")
         html_node = node.text_node_to_html_node()
         self.assertEqual(html_node.props["href"], "https://bootleg.com")
         self.assertEqual(html_node.tag, "a")
