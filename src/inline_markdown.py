@@ -7,9 +7,9 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
         ident = "second_node_tt"
         count = 0
         dev = float
-        if node[0] == delimiter:
+        if node.text[0] == delimiter:
             ident = "start_with_tt"
-        node_parts = node.split(delimiter)
+        node_parts = node.text.split(delimiter)
         for part in node_parts:
             if ident == "start _with_tt":
                 dev = int
@@ -32,25 +32,25 @@ def split_nodes_image(old_nodes):
         else:
             image_nodes = []
             #Funal matches into TextNodes
-            for i in range(0, len(matches), 2):
+            for i in range(0, len(matches)-1, 2):
                 image_node = TextNode(matches[i], "image", matches[i + 1])
                 alt = matches[i]
                 url = matches[i + 1]
                 new_nodes.append(image_node)
-                image_nodes.append(node.split(f"![{alt}]({url})"))
+                image_nodes.append(node.text.split(f"![{alt}]({url})"))
             #Get nodes in order
             first_iteration = True
             for image in image_nodes:
                 plain_texts = []
                 if first_iteration == True:
                     plain_texts = node.text.split(f"![{alt}]({url})", 1)
-                else:
-                    plain_texts = plain_texts[1].split(f"![{alt}]({url})", 1)
-                textnode = TextNode(plain_texts[0], "plain")
+                if first_iteration == False:
+                    plain_texts = plain_texts[0] + plain_texts[1].split(f"![{alt}]({url})", 1)
+                textnode = TextNode(plain_texts[0], TextType.TEXT)
                 new_nodes.append(textnode)
-                image_node = TextNode(image, "image",)
+                image_node = TextNode(image, TextType.IMAGE,)
                 new_nodes.append(image_node)
-                textnode = TextNode(plain_texts[1], "plain")
+                textnode = TextNode(plain_texts[1], TextType.TEXT)
                 new_nodes.append(textnode)
                 first_iteration = False
     return new_nodes
@@ -70,7 +70,7 @@ def split_nodes_link(old_nodes):
                 alt = matches[i]
                 url = matches[i + 1]
                 new_nodes.append(link_node)
-                link_nodes.append(node.split(f"![{alt}]({url})"))
+                link_nodes.append(node.text.split(f"![{alt}]({url})"))
             #Get nodes in order
             first_iteration = True
             for link in link_nodes:
@@ -96,7 +96,7 @@ def extract_markdown_links(text):
     matches = re.findall(r"(?<!!)\[([^\[\]]*)\]\(([^\(\)]*)\)", text)
     return matches
 
-def text_to_textodes(text):
+def text_to_textnodes(text):
     starting_node = TextNode(text, TextType.TEXT)
     iter_one_nodes = split_nodes_image([starting_node])
     iter_two_nodes = split_nodes_link(iter_one_nodes)
