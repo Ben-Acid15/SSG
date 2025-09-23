@@ -3,89 +3,75 @@ import re
 
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
     new_nodes = []
-    for node in old_nodes:
-        ident = "second_node_tt"
-        count = 0
-        dev = float
-        if node.text[0] == delimiter:
-            ident = "start_with_tt"
-        node_parts = node.text.split(delimiter)
-        for part in node_parts:
-            if ident == "start _with_tt":
-                dev = int
-            if count / 2 == dev:
-                tt = text_type
+    for old_node in old_nodes:
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.append(old_node)
+            continue
+        split_nodes = []
+        sections = old_node.text.split(delimiter)
+        if len(sections) % 2 == 0:
+            raise ValueError("invalid markdown, formatted section not closed")
+        for i in range(len(sections)):
+            if sections[i] == "":
+                continue
+            if i % 2 == 0:
+                split_nodes.append(TextNode(sections[i], TextType.TEXT))
             else:
-                tt = "plain"
-            text_node = TextNode(part, tt)
-            new_nodes.append(text_node)
-            count += 1
+                split_nodes.append(TextNode(sections[i], text_type))
+        new_nodes.extend(split_nodes)
     return new_nodes
 
 def split_nodes_image(old_nodes):
     new_nodes = []
-    for node in old_nodes:    
-        #Extracts images
-        matches = extract_markdown_images(node.text)
-        if len(matches) == 0:
-                new_nodes.append(node)
-        else:
-            image_nodes = []
-            #Funal matches into TextNodes
-            for i in range(0, len(matches)-1, 2):
-                image_node = TextNode(matches[i], "image", matches[i + 1])
-                alt = matches[i]
-                url = matches[i + 1]
-                new_nodes.append(image_node)
-                image_nodes.append(node.text.split(f"![{alt}]({url})"))
-            #Get nodes in order
-            first_iteration = True
-            for image in image_nodes:
-                plain_texts = []
-                if first_iteration == True:
-                    plain_texts = node.text.split(f"![{alt}]({url})", 1)
-                if first_iteration == False:
-                    plain_texts = plain_texts[0] + plain_texts[1].split(f"![{alt}]({url})", 1)
-                textnode = TextNode(plain_texts[0], TextType.TEXT)
-                new_nodes.append(textnode)
-                image_node = TextNode(image, TextType.IMAGE,)
-                new_nodes.append(image_node)
-                textnode = TextNode(plain_texts[1], TextType.TEXT)
-                new_nodes.append(textnode)
-                first_iteration = False
+    for old_node in old_nodes:
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.append(old_node)
+            continue
+        original_text = old_node.text
+        images = extract_markdown_images(original_text)
+        if len(images) == 0:
+            new_nodes.append(old_node)
+            continue
+        for image in images:
+            sections = original_text.split(f"![{image[0]}]({image[1]})", 1)
+            if len(sections) != 2:
+                raise ValueError("invalid markdown, image section not closed")
+            if sections[0] != "":
+                new_nodes.append(TextNode(sections[0], TextType.TEXT))
+            new_nodes.append(
+                TextNode(
+                    image[0],
+                    TextType.IMAGE,
+                    image[1],
+                )
+            )
+            original_text = sections[1]
+        if original_text != "":
+            new_nodes.append(TextNode(original_text, TextType.TEXT))
     return new_nodes
+
 
 def split_nodes_link(old_nodes):
     new_nodes = []
-    for node in old_nodes:    
-        #Extracts images
-        matches = extract_markdown_links(node.text)
-        if len(matches) == 0:
-                new_nodes.append(node)
-        else:
-            link_nodes = []
-            #Funal matches into TextNodes
-            for i in range(0, len(matches), 2):
-                link_node = TextNode(matches[i], "image", matches[i + 1])
-                alt = matches[i]
-                url = matches[i + 1]
-                new_nodes.append(link_node)
-                link_nodes.append(node.text.split(f"![{alt}]({url})"))
-            #Get nodes in order
-            first_iteration = True
-            for link in link_nodes:
-                plain_texts = []
-                if first_iteration == True:
-                    plain_texts = node.text.split(f"![{alt}]({url})", 1)
-                else:
-                    plain_texts = plain_texts[1].split(f"![{alt}]({url})", 1)
-                textnode = TextNode(plain_texts[0], "plain")
-                new_nodes.append(textnode)
-                link_node = TextNode(link, "image",)
-                new_nodes.append(link_node)
-                textnode = TextNode(plain_texts[1], "plain")
-                new_nodes.append(textnode)
-                first_iteration = False
+    for old_node in old_nodes:
+        if old_node.text_type != TextType.TEXT:
+            new_nodes.append(old_node)
+            continue
+        original_text = old_node.text
+        links = extract_markdown_links(original_text)
+        if len(links) == 0:
+            new_nodes.append(old_node)
+            continue
+        for link in links:
+            sections = original_text.split(f"[{link[0]}]({link[1]})", 1)
+            if len(sections) != 2:
+                raise ValueError("invalid markdown, link section not closed")
+            if sections[0] != "":
+                new_nodes.append(TextNode(sections[0], TextType.TEXT))
+            new_nodes.append(TextNode(link[0], TextType.LINK, link[1]))
+            original_text = sections[1]
+        if original_text != "":
+            new_nodes.append(TextNode(original_text, TextType.TEXT))
     return new_nodes
 
 def extract_markdown_images(text):

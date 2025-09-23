@@ -8,26 +8,26 @@ class TestInlineMarkdown(unittest.TestCase):
             old_nodes = [TextNode("The plain text and _the italic text_", TextType.TEXT),
                         TextNode("_The italic text and_ the plain text", TextType.TEXT)]
             new_nodes = split_nodes_delimiter(old_nodes, "_", TextType.ITALIC)
-            self.assertEqual(new_nodes, [TextNode("The plain text and", TextType.TEXT),
+            self.assertEqual(new_nodes, [TextNode("The plain text and ", TextType.TEXT),
                                         TextNode("the italic text", TextType.ITALIC),
                                         TextNode("The italic text and", TextType.ITALIC),
-                                        TextNode("the plain text", TextType.TEXT)])
+                                        TextNode(" the plain text", TextType.TEXT)])
     def test_split_nodes_bold(self):
-        old_nodes = [TextNode("The plain text and _the bold text_", TextType.TEXT),
-                    TextNode("_The bold text and_ the plain text", TextType.TEXT)]
-        new_nodes = split_nodes_delimiter(old_nodes, "_", TextType.BOLD)
-        self.assertEqual(new_nodes, [TextNode("The plain text and", TextType.TEXT),
+        old_nodes = [TextNode("The plain text and **the bold text**", TextType.TEXT),
+                    TextNode("**The bold text and** the plain text", TextType.TEXT)]
+        new_nodes = split_nodes_delimiter(old_nodes, "**", TextType.BOLD)
+        self.assertEqual(new_nodes, [TextNode("The plain text and ", TextType.TEXT),
                                     TextNode("the bold text", TextType.BOLD),
                                     TextNode("The bold text and", TextType.BOLD),
-                                    TextNode("the plain text", TextType.TEXT)])
+                                    TextNode(" the plain text", TextType.TEXT)])
     def test_split_nodes_code(self):
-        old_nodes = [TextNode("The plain text and _the code text_", TextType.TEXT),
-                    TextNode("_The code text and_ the plain text", TextType.TEXT)]
-        new_nodes = split_nodes_delimiter(old_nodes, "_", "code")
-        self.assertEqual(new_nodes, [TextNode("The plain text and", TextType.TEXT),
-                                    TextNode("the code text", "code"),
-                                    TextNode("The code text and", "code"),
-                                    TextNode("the plain text", TextType.TEXT)])
+        old_nodes = [TextNode("The plain text and `the code text`", TextType.TEXT),
+                    TextNode("`The code text and` the plain text", TextType.TEXT)]
+        new_nodes = split_nodes_delimiter(old_nodes, "`", TextType.CODE)
+        self.assertEqual(new_nodes, [TextNode("The plain text and ", TextType.TEXT),
+                                    TextNode("the code text", TextType.CODE),
+                                    TextNode("The code text and", TextType.CODE),
+                                    TextNode(" the plain text", TextType.TEXT)])
         
     #text_extract
     def test_extract_markdown_image(self):
@@ -70,8 +70,8 @@ class TestInlineMarkdown(unittest.TestCase):
             [
                 TextNode("Image", TextType.IMAGE, "https://i.imgur.com/zjjcJKZ.png"),
                 TextNode(" right at the start and another ", TextType.TEXT),
-                TextNode("second image", TextType.IMAGE, "https://i.imgur.com/3elNhQu.png")],
-                TextNode(" later!", TextType.TEXT), new_nodes)
+                TextNode("second image", TextType.IMAGE, "https://i.imgur.com/3elNhQu.png"),
+                TextNode(" later!", TextType.TEXT)], new_nodes)
 
     #split_links
     def test_split_links(self):
