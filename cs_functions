@@ -1,0 +1,120 @@
+from enum import Enum
+import re
+from htmlnode import *
+from block_markdown import *
+from inline_markdown import *
+
+
+
+
+#BlockMarkdown
+
+class BlockType(Enum):
+    PARAGRAPH = "paragraph"
+    HEADING = "heading"
+    CODE = "code"
+    QUOTE = "quote"
+    UNORDERED_LIST = "unordered_list"
+    ORDERED_LIST = "ordered_list"
+
+def block_to_blocktype(block):
+    return BlockType.XY
+
+def markdown_to_blocks(markdown):
+    return striped_blocks
+
+def header_level(header):
+    return HTMLNode #with proper h-level
+
+def markdown_to_html_node(markdown):
+    return HTMLNode #multiple
+
+
+
+
+#HTMLNode
+
+class HTMLNode:
+    def __init__(self, tag=None, value=None, children=None, props=None):
+
+    def to_html(self):
+        raise NotImplementedError("to_html method not implemented")
+
+    def props_to_html(self):
+        return props_html
+
+    def __repr__(self):
+        return f"HTMLNode({self.tag}, {self.value}, children: {self.children}, {self.props})"
+
+
+class ParentNode(HTMLNode):
+    def __init__(self, tag, children, props=None):
+        super().__init__(tag, None, children, props)
+    
+    def to_html(self):
+        return f"<{self.tag}>{children_str}</{self.tag}>"
+
+
+class LeafNode(HTMLNode):
+    def __init__(self, tag, value, props=None):
+        super().__init__(tag, value, None, props)
+
+    def to_html(self):
+        return f"<{self.tag}{self.props_to_html()}>{self.value}</{self.tag}>"
+
+    def __repr__(self):
+        return f"LeafNode({self.tag}, {self.value}, {self.props})"
+
+
+
+
+#InlineMarkdown
+
+def split_nodes_delimiter(old_nodes, delimiter, text_type):
+    return new_nodes
+
+def split_nodes_image(old_nodes):
+    return new_nodes #TextNodes with text and images
+
+def split_nodes_link(old_nodes):
+    return new_nodes #TextNodes with text and links
+
+def extract_markdown_images(text):
+    return found_images #alt and url
+
+def extract_markdown_links(text):
+    return found_links #anchor and url
+
+def text_to_textnodes(text):
+    return TextNode #multiple
+
+from enum import Enum
+from htmlnode import LeafNode
+
+
+
+
+#TextNodes
+
+class TextType(Enum):
+    TEXT = "plain"
+    BOLD = "bold"
+    ITALIC = "italic"
+    CODE = "code"
+    LINK = "link"
+    IMAGE = "image"
+
+class TextNode:
+    def __init__(self, text, text_type, url=None):
+
+    def __eq__(self, node2):
+        if self.text == node2.text and self.text_type == node2.text_type and self.url == node2.url:
+            return True
+        else:
+            return False
+        
+    def __repr__(self):
+        return f"TextNode({self.text}, {self.text_type}, {self.url})"
+    
+    def text_node_to_html_node(self):
+        return LeafNode #of proper TextType
