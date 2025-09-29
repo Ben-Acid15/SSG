@@ -21,19 +21,20 @@ class TextNode:
             return False
     def __repr__(self):
         return f"TextNode({self.text}, {self.text_type}, {self.url})"
-    def text_node_to_html_node(self):
-        match self.text_type:
-            case TextType.TEXT:
-                return LeafNode(None, self.text, None)
-            case TextType.BOLD:
-                return LeafNode("b", self.text, None)
-            case TextType.ITALIC:
-                return LeafNode("i", self.text, None)
-            case TextType.CODE:
-                return LeafNode("code", self.text, None)
-            case TextType.LINK:
-                return LeafNode("a", self.text, props={"href": self.url})
-            case TextType.IMAGE:
-                return LeafNode("img", "", props={"src": self.url,"alt": self.text})
-            case _:
-                raise Exception("No valid TextType in provided node")
+
+def text_node_to_html_node(self):
+    match self.text_type:
+        case TextType.TEXT:
+            return LeafNode(None, self.text, None)
+        case TextType.BOLD:
+            return LeafNode("b", self.text, None)
+        case TextType.ITALIC:
+            return LeafNode("i", self.text, None)
+        case TextType.CODE:
+            return LeafNode("code", self.text, None)
+        case TextType.LINK:
+            return LeafNode("a", self.text, props={"href": self.url})
+        case TextType.IMAGE:
+            return LeafNode("img", "", props={"src": self.url,"alt": self.text})
+        case _:
+            raise Exception("No valid TextType in provided node")

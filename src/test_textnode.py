@@ -1,5 +1,5 @@
 import unittest
-from textnode import TextNode, TextType
+from textnode import TextNode, TextType, text_node_to_html_node
 
 
 
@@ -28,18 +28,18 @@ class TestTextNode(unittest.TestCase):
     #text_to_html
     def test_image(self):
         node = TextNode("alt text", TextType.IMAGE, "https://bootleg.com/img")
-        html_node = node.text_node_to_html_node()
+        html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.props["alt"], "alt text")
         self.assertEqual(html_node.props["src"], "https://bootleg.com/img")
         self.assertEqual(html_node.tag, "img")
     def test_text(self):
         node = TextNode("This is a text node", TextType.TEXT)
-        html_node = node.text_node_to_html_node()
+        html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.tag, None)
         self.assertEqual(html_node.value, "This is a text node")
     def test_link(self):
         node = TextNode("Harmless link", TextType.LINK, "https://bootleg.com")
-        html_node = node.text_node_to_html_node()
+        html_node = text_node_to_html_node(node)
         self.assertEqual(html_node.props["href"], "https://bootleg.com")
         self.assertEqual(html_node.tag, "a")
 

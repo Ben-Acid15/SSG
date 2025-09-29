@@ -79,11 +79,11 @@ def split_nodes_image(old_nodes):
 def split_nodes_link(old_nodes):
     return new_nodes #TextNodes with text and links
 
-def extract_markdown_images(text):
-    return found_images #alt and url
+#def extract_markdown_images(text):
+#    return found_images #alt and url
 
-def extract_markdown_links(text):
-    return found_links #anchor and url
+#def extract_markdown_links(text):
+#    return found_links #anchor and url
 
 def text_to_textnodes(text):
     return TextNode #multiple
