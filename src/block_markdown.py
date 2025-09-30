@@ -153,7 +153,7 @@ def quote_to_html_node(block):
 def extract_header(markdown):
     lines = markdown.split("\n")
     for line in lines:
-        if line[0] == "#":
+        if line[0] == "#" and line[1] != "#":
             result = line.strip("#").strip()
             return result
     raise Exception("No <h1> header found")

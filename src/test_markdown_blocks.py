@@ -3,6 +3,7 @@ from block_markdown import (
     markdown_to_html_node,
     markdown_to_blocks,
     block_to_blocktype,
+    extract_header,
     BlockType,
 )
 
@@ -162,7 +163,25 @@ the **same** even with inline stuff
             html,
             "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
         )
+    def test_extract_header_oneline(self):
+        markdown = "# Header"
+        header = extract_header(markdown)
+        self.assertEqual("Header", header)
 
+    def test_extract_header_multiline(self):
+        markdown = "# Header \n and other stuff"
+        header = extract_header(markdown)
+        self.assertEqual("Header", header)
+    
+    def test_extract_header_multiheader(self):
+        markdown = "# Header1 \n ## Header2"
+        header = extract_header(markdown)
+        self.assertEqual("Header1", header)
+    
+    def test_extract_header_multiheader(self):
+        markdown = "### Header3 \n ## Header2\n#Header1"
+        header = extract_header(markdown)
+        self.assertEqual("Header1", header)
 
 if __name__ == "__main__":
     unittest.main()
