@@ -1,4 +1,5 @@
 from enum import Enum
+import re
 
 from htmlnode import ParentNode
 from inline_markdown import text_to_textnodes
@@ -148,3 +149,11 @@ def quote_to_html_node(block):
     content = " ".join(new_lines)
     children = text_to_children(content)
     return ParentNode("blockquote", children)
+
+def extract_header(markdown):
+    lines = markdown.split("\n")
+    for line in lines:
+        if line[0] == "#":
+            result = line.strip("#").strip()
+            return result
+    raise Exception("No <h1> header found")

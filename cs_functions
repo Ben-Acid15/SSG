@@ -23,9 +23,6 @@ def block_to_blocktype(block):
 def markdown_to_blocks(markdown):
     return striped_blocks
 
-def header_level(header):
-    return HTMLNode #with proper h-level
-
 def markdown_to_html_node(markdown):
     return HTMLNode #multiple
 
