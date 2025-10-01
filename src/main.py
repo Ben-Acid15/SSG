@@ -9,7 +9,7 @@ dir_path_static = "./static"
 dir_path_public = "./docs"
 dir_path_content = "./content"
 template_path = "./template.html"
-if len(sys.argv) == 0:
+if len(sys.argv) <= 1:
         basepath = "/"
 else:
     basepath = sys.argv[1]
@@ -18,7 +18,7 @@ else:
 
 def main():
     print("Getting contents")
-    copy_and_migrate(pathlib.Path("./static"), pathlib.Path("./public"))
+    copy_and_migrate(pathlib.Path(dir_path_static), pathlib.Path(dir_path_public))
     print("Generating pages")
     generate_pages_recursive(basepath, pathlib.Path(dir_path_content), pathlib.Path(template_path), pathlib.Path(dir_path_public))
 
