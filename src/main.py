@@ -1,15 +1,25 @@
+import pathlib
+import sys
+
 from textnode import *
 from data_management import copy_and_migrate
-import pathlib
 from generation import generate_pages_recursive
 
-print("hello world")
+dir_path_static = "./static"
+dir_path_public = "./docs"
+dir_path_content = "./content"
+template_path = "./template.html"
+if len(sys.argv) == 0:
+        basepath = "/"
+else:
+    basepath = sys.argv[1]
 
-def main(text, text_type, url):
-    new_node = TextNode(text, text_type, url)
-    print(f"{new_node}")
+
+
+def main():
+    print("Getting contents")
     copy_and_migrate(pathlib.Path("./static"), pathlib.Path("./public"))
-    generate_pages_recursive(pathlib.Path("./content"), pathlib.Path("template.html"), pathlib.Path("public"))
+    print("Generating pages")
+    generate_pages_recursive(basepath, pathlib.Path(dir_path_content), pathlib.Path(template_path), pathlib.Path(dir_path_public))
 
-
-main("Anchor", TextType.LINK.value, "http://boot.com")
+main()
