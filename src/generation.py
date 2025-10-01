@@ -19,8 +19,8 @@ def generate_page(basepath, from_path, template_path, dest_path):
     title = extract_header(source_content)
     template_content = template_content.replace("{{ Title }}", title)
     template_content = template_content.replace("{{ Content }}", html_string)
-    template_content = template_content.replace("href=/", f"href={basepath}")
-    template_content = template_content.replace("src=/", f"src={basepath}")
+    template_content = template_content.replace('href="/', f'href="{basepath}')
+    template_content = template_content.replace('src="/', f'src="{basepath}')
     with open(dest_path, "w") as file:
         file.write(template_content)
 
